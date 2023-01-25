@@ -46,4 +46,8 @@ android {
             res.srcDirs("src/androidMain/res")
         }
     }
+    namespace = "com.myapplication.common"
+}
+dependencies {
+    implementation("androidx.compose.material:material:1.3.1")
 }
