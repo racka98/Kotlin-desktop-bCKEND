@@ -50,4 +50,5 @@ android {
 }
 dependencies {
     implementation("androidx.compose.material:material:1.3.1")
+    implementation("androidx.compose.material:material-icons-core:1.3.1")
 }
