@@ -1,11 +1,12 @@
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +19,41 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import javax.swing.text.StyleConstants.Alignment
+import java.io.File
+import javax.naming.Context
+
+
+@Composable
+fun ExposedDropdownMenu(context: Context) {
+    val items = listOf("Item 1", "Item 2", "Item 3")
+    var selectedItem by remember { mutableStateOf(items.first()) }
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        DropdownMenu(
+            toggle = {
+                Text("Selected: ${selectedItem.value}")
+            },
+            expanded = expanded.value,
+            onDismissRequest = {
+                expanded.value = false
+            },
+            dropdown = {
+                items.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(item) },
+                        onClick = {
+                            selectedItem.value = item
+                            expanded.value = false
+                        }
+                    )
+                }
+            }
+        )
+    }
+}
+
+
 
 @Composable
 fun App() {
@@ -48,29 +83,30 @@ fun App() {
                 )
             }
         //Identification dropdown menu Text Area ***************************************************************
+            var mExpanded by remember { mutableStateOf(false) }
+
+            val icon = if (mExpanded)
+                Icons.Filled.KeyboardArrowUp
+            else
+                Icons.Filled.KeyboardArrowDown
+
+            var mTextFieldSize by remember { mutableStateOf(" ")}
             val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
             var mSelectedText by remember { mutableStateOf("") }
-            Text("Select Valid identification :", textAlign = TextAlign.Center)
             Column(Modifier.padding(20.dp)) {
+                Text("Select Valid Identification ", textAlign = TextAlign.Center)
                 OutlinedTextField(
                     value = mSelectedText,
-                    onValueChange = {
-                        mSelectedText = it
-                    },
+                    onValueChange = { mSelectedText = it },
+                    modifier = Modifier.fillMaxWidth().onGloballyPositioned { coordinates -> mTextFieldSize = coordinates.size.toSize().toString() },
+                    label = {Text("Label")},
                     trailingIcon = {
-                        IconButton(
-                            onClick = { mSelectedText = "" }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Clear,
-                                contentDescription = "Clear"
-                            )
-                        }
-
+                        Icon(icon,"contentDescription", Modifier.clickable { mExpanded = !mExpanded })
                     }
                 )
-            }
 
+            }
+            ExposedDropdownMenu(Context)
 
             //Choose File ******************************************************************************************
             Column(
@@ -81,9 +117,30 @@ fun App() {
                 }
             }
             //Submit Button ******************************************************************************************
+            val sourcePath = remember { mutableStateOf<String?>(null) }
                 Column(
                     modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = {
+                        val folder = "C:\\Intern"
+                        val fileName= text
+                        val f = File(folder, fileName)
+                        f.mkdir()
+                        //Creating New Folder inside Name for identification
+                        val folder1 = folder+"\\"+fileName
+                        val fileName1= mSelectedText
+                        val f1 = File(folder1, fileName1)
+                        f1.mkdir()
+                        val destinePath:String =folder1+"\\"+fileName1
+                        val destination:String = destinePath as String
+
+                        val source:String = sourcePath.value as String
+                        println(source)
+                        println(destination)
+//
+//
+//                        val sourcePath1 = Paths.get(source)
+//                        val targetPath1 = Paths.get(destination)
+
                     }) {
                         Text("Submit")
                     }
@@ -94,5 +151,7 @@ fun App() {
         }
 
         }
+
+
 
 expect fun getPlatformName(): String
