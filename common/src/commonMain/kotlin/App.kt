@@ -23,36 +23,6 @@ import java.io.File
 import javax.naming.Context
 
 
-@Composable
-fun ExposedDropdownMenu(context: Context) {
-    val items = listOf("Item 1", "Item 2", "Item 3")
-    var selectedItem by remember { mutableStateOf(items.first()) }
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        DropdownMenu(
-            toggle = {
-                Text("Selected: ${selectedItem.value}")
-            },
-            expanded = expanded.value,
-            onDismissRequest = {
-                expanded.value = false
-            },
-            dropdown = {
-                items.forEach { item ->
-                    DropdownMenuItem(
-                        text = { Text(item) },
-                        onClick = {
-                            selectedItem.value = item
-                            expanded.value = false
-                        }
-                    )
-                }
-            }
-        )
-    }
-}
-
 
 
 @Composable
@@ -106,7 +76,7 @@ fun App() {
                 )
 
             }
-            ExposedDropdownMenu(Context)
+//            ExposedDropdownMenu(Context)
 
             //Choose File ******************************************************************************************
             Column(
