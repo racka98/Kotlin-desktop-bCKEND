@@ -7,11 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,12 +16,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import java.io.File
-import javax.naming.Context
+import javax.swing.JFileChooser
 
-
-
-
-
+fun selectFile(pathState: MutableState<String?>) {
+    JFileChooser().apply {
+        if (showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            pathState.value = selectedFile.path
+        }
+    }
+}
 @Composable
 fun App() {
     MaterialTheme {
@@ -62,7 +61,7 @@ fun App() {
                 Icons.Filled.KeyboardArrowDown
 
             var mTextFieldSize by remember { mutableStateOf(" ")}
-            val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
+//            val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
             var mSelectedText by remember { mutableStateOf("") }
             Column(Modifier.padding(20.dp)) {
                 Text("Select Valid Identification ", textAlign = TextAlign.Center)
@@ -80,15 +79,30 @@ fun App() {
 //            ExposedDropdownMenu(Context)
 
             //Choose File ******************************************************************************************
+            val sourcePath = remember { mutableStateOf<String?>(null) }
+//            var isFileChooserOpen by remember { mutableStateOf(false) }
+//
+//            if (isFileChooserOpen) {
+//                FileDialog(
+//
+//                    onCloseRequest = {
+//                        isFileChooserOpen = false
+//                        println("Result $it")
+//                    }
+//                )
+//            }
             Column(
                 modifier = Modifier.fillMaxWidth()) {
                 Button(onClick = {
+                    selectFile(sourcePath)
+                    println(sourcePath.value)
+
+//                    isFileChooserOpen = true
                 }) {
                     Text("Choose File")
                 }
             }
             //Submit Button ******************************************************************************************
-            val sourcePath = remember { mutableStateOf<String?>(null) }
                 Column(
                     modifier = Modifier.fillMaxWidth()) {
                     Button(onClick = {
@@ -102,7 +116,7 @@ fun App() {
                         val f1 = File(folder1, fileName1)
                         f1.mkdir()
                         val destinePath:String =folder1+"\\"+fileName1
-                        val destination:String = destinePath as String
+                        val destination:String = destinePath
 
                         val source:String = sourcePath.value as String
                         println(source)
@@ -121,7 +135,25 @@ fun App() {
 
         }
 
-        }
+}
+
+//@Composable
+//private fun FileDialog(
+//    parent: Frame? = null,
+//    onCloseRequest: (result: String?) -> Unit
+//) = AwtWindow(
+//    create = {
+//        object : FileDialog(parent, "Choose a file", LOAD) {
+//            override fun setVisible(value: Boolean) {
+//                super.setVisible(value)
+//                if (value) {
+//                    onCloseRequest(file)
+//                }
+//            }
+//        }
+//    },
+//    dispose = FileDialog::dispose
+//)
 
 
 
