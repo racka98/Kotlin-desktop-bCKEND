@@ -2,6 +2,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -63,7 +65,7 @@ fun App() {
                 Icons.Filled.KeyboardArrowDown
 
             var mTextFieldSize by remember { mutableStateOf(" ")}
-//            val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
+
             var mSelectedText by remember { mutableStateOf("") }
             Column(Modifier.padding(20.dp)) {
                 Text("Select Valid Identification ", textAlign = TextAlign.Center)
@@ -149,6 +151,51 @@ fun App() {
 //    dispose = FileDialog::dispose
 //)
 
+@Composable
+fun MyContent(){
+    var mExpanded by remember { mutableStateOf(false) }
 
+    val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
+
+    var mSelectedText by remember { mutableStateOf("") }
+
+    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+    Column(Modifier.padding(20.dp)) {
+        OutlinedTextField(
+            value = mSelectedText,
+            onValueChange = { mSelectedText = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates ->
+                    mTextFieldSize = coordinates.size.toSize()
+                },
+            label = {Text("Label")},
+            trailingIcon = {
+                Icon(icon,"contentDescription",
+                    Modifier.clickable { mExpanded = !mExpanded })
+            }
+        )
+        DropdownMenu(
+            expanded = mExpanded,
+            onDismissRequest = { mExpanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
+        ) {
+            listItems.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    mSelectedText = label
+                    mExpanded = false
+                }) {
+                    Text(text = label)
+                }
+            }
+        }
+    }
+}
 
 expect fun getPlatformName(): String
