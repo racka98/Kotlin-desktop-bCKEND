@@ -3,19 +3,13 @@ CREATE TABLE IF NOT EXISTS DemoEntity (
     name TEXT,
     password INTEGER NOT NULL,
     identification TEXT NOT NULL ,
-    Data BLOB
+    data BLOB
 );
 
 selectAll:
 SELECT *
 FROM DemoEntity;
 
-delete:
-DELETE FROM DemoEntity
-WHERE name = :name;
-
-getLastInsert:
-SELECT last_insert_rowid();
-
-clear:
-DELETE FROM DemoEntity;
+insertReminder:
+INSERT OR IGNORE INTO DemoEntity(id, name,password,identification,data)
+VALUES (?,?,?,?,?);

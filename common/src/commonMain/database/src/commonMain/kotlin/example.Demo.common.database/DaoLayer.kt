@@ -8,13 +8,15 @@ class DaoLayer (
             .selectAll()
             .executeAsList()
 
-    fun getLastInsert:(id: String, name: String) {
-        dbRef.tableQueries.insertReminder(id, title)
+    fun insertReminder:(id: String, name: String,password:String,identification:String,data:String) {
+        dbRef.tableQueries.insertReminder(id, name,password,identification,data)
     }
 
 }
 fun DemoEntity.map() = Reminder(
     id = this.id,
-    name = this.title,
-    data = this.isCompleted(),
+    name = this.name,
+    password = this.password,
+    identification =this.identification,
+    data = this.data
 )

@@ -17,10 +17,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import java.awt.FileDialog
-import java.awt.Frame
 import java.io.File
 import javax.swing.JFileChooser
+
 
 fun selectFile(pathState: MutableState<String?>) {
     JFileChooser().apply {
@@ -33,6 +32,17 @@ fun selectFile(pathState: MutableState<String?>) {
 fun App() {
     MaterialTheme {
         Column {
+            //id Text Area **************************************************************************************
+            var text1 by remember { mutableStateOf("") }
+            Column(Modifier.padding(20.dp)){
+                Text("ID ", textAlign = TextAlign.Center)
+                OutlinedTextField(
+                    value=text,
+                    onValueChange = { text= it},
+                    label = { Text("id")}
+                )
+            }
+
         //Full Name Text Area **************************************************************************************
         var text by remember { mutableStateOf("") }
         Column(Modifier.padding(20.dp)){
@@ -133,69 +143,53 @@ fun App() {
         }
 }
 
+
 //@Composable
-//private fun FileDialog(
-//    parent: Frame? = null,
-//    onCloseRequest: (result: String?) -> Unit
-//) = AwtWindow(
-//    create = {
-//        object : FileDialog(parent, "Choose a file", LOAD) {
-//            override fun setVisible(value: Boolean) {
-//                super.setVisible(value)
-//                if (value) {
-//                    onCloseRequest(file)
-//                }
+//fun MyContent(){
+//    var mExpanded by remember { mutableStateOf(false) }
+//    var mSelectedText by remember { mutableStateOf("") }
+//
+//    var mTextFieldSize by remember { mutableStateOf("")}
+//    val icon = if (mExpanded)
+//        Icons.Filled.KeyboardArrowUp
+//    else
+//        Icons.Filled.KeyboardArrowDown
+//
+//    Column(Modifier.padding(20.dp)) {
+//        OutlinedTextField(
+//            value = mSelectedText,
+//            onValueChange = { mSelectedText = it },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .onGloballyPositioned { coordinates ->
+//                    mTextFieldSize = coordinates.size.toSize().toString()
+//                },
+//            label = {Text("Label")},
+//            trailingIcon = {
+//                Icon(icon,"contentDescription",
+//                    Modifier.clickable { mExpanded = !mExpanded })
+//            }
+//        )
+//        DropdownMenu(
+//            ,
+//            onDismissRequest = { mExpanded = false },
+//            modifier = Modifier.width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
+//        )
+//    }
+//}
+
+//@Composable
+//fun DropdownMenu(expanded: Boolean, onDismissRequest: () -> Unit, modifier: Any, function: () -> Unit) {
+//    val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
+//        listItems.forEach { label ->
+//            DropdownMenuItem(onClick = {
+//                mSelectedText = label
+//                mExpanded = false
+//            }) {
+//                Text(text = label)
 //            }
 //        }
-//    },
-//    dispose = FileDialog::dispose
-//)
+//    }
 
-@Composable
-fun MyContent(){
-    var mExpanded by remember { mutableStateOf(false) }
-
-    val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
-
-    var mSelectedText by remember { mutableStateOf("") }
-
-    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    Column(Modifier.padding(20.dp)) {
-        OutlinedTextField(
-            value = mSelectedText,
-            onValueChange = { mSelectedText = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    mTextFieldSize = coordinates.size.toSize()
-                },
-            label = {Text("Label")},
-            trailingIcon = {
-                Icon(icon,"contentDescription",
-                    Modifier.clickable { mExpanded = !mExpanded })
-            }
-        )
-        DropdownMenu(
-            expanded = mExpanded,
-            onDismissRequest = { mExpanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
-        ) {
-            listItems.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    mSelectedText = label
-                    mExpanded = false
-                }) {
-                    Text(text = label)
-                }
-            }
-        }
-    }
-}
 
 expect fun getPlatformName(): String
