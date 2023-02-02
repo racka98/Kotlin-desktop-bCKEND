@@ -15,6 +15,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import java.awt.FileDialog
+import java.awt.Frame
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -80,14 +82,14 @@ fun App() {
 
             //Choose File ******************************************************************************************
             val sourcePath = remember { mutableStateOf<String?>(null) }
-//            var isFileChooserOpen by remember { mutableStateOf(false) }
+            var isFileChooserOpen by remember { mutableStateOf(false) }
 //
 //            if (isFileChooserOpen) {
 //                FileDialog(
 //
 //                    onCloseRequest = {
 //                        isFileChooserOpen = false
-//                        println("Result $it")
+////                        println("Result $it")
 //                    }
 //                )
 //            }
@@ -97,7 +99,7 @@ fun App() {
                     selectFile(sourcePath)
                     println(sourcePath.value)
 
-//                    isFileChooserOpen = true
+                    isFileChooserOpen = true
                 }) {
                     Text("Choose File")
                 }
@@ -121,20 +123,12 @@ fun App() {
                         val source:String = sourcePath.value as String
                         println(source)
                         println(destination)
-//
-//
-//                        val sourcePath1 = Paths.get(source)
-//                        val targetPath1 = Paths.get(destination)
-
                     }) {
                         Text("Submit")
                     }
                 }
             }
-
-
         }
-
 }
 
 //@Composable

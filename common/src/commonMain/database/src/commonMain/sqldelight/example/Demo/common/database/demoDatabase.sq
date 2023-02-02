@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS DemoEntity (
+    id TEXT,
+    name TEXT,
+    password INTEGER NOT NULL,
+    identification TEXT NOT NULL ,
+    Data BLOB
+);
+
+selectAll:
+SELECT *
+FROM DemoEntity;
+
+delete:
+DELETE FROM DemoEntity
+WHERE name = :name;
+
+getLastInsert:
+SELECT last_insert_rowid();
+
+clear:
+DELETE FROM DemoEntity;
