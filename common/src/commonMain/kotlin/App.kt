@@ -37,8 +37,8 @@ fun App() {
             Column(Modifier.padding(20.dp)){
                 Text("ID ", textAlign = TextAlign.Center)
                 OutlinedTextField(
-                    value=text,
-                    onValueChange = { text= it},
+                    value=text1,
+                    onValueChange = { text1 = it},
                     label = { Text("id")}
                 )
             }
