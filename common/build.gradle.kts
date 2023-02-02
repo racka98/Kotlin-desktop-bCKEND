@@ -52,4 +52,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.compose.material:material-icons-core:1.3.1")
     implementation("androidx.annotation:annotation-jvm:+")
+    implementation("androidx.compose.ui:ui-unit:1.3.3")
+    implementation("androidx.compose.ui:ui:1.3.3")
+    implementation("androidx.compose.foundation:foundation:1.3.1")
 }
