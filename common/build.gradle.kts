@@ -1,7 +1,19 @@
+val sqldelightVersion = "1.5.4"
+
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id("com.squareup.sqldelight").version("1.5.4")
+}
+
+sqldelight {
+    database("demoDatabase") {
+        packageName = "com.myapplication.common"
+        sourceFolders = listOf("sqldelight")
+        schemaOutputDirectory =
+            file("src/commonMain/sqldelight/com/myapplication/common/outputs")
+    }
 }
 
 kotlin {
@@ -17,12 +29,23 @@ kotlin {
                 api(compose.material)
                 // Needed only for preview.
                 implementation(compose.preview)
+                // SQL Delight
+                implementation("com.squareup.sqldelight:runtime:$sqldelightVersion")
+                implementation("com.squareup.sqldelight:coroutines-extensions:$sqldelightVersion")
             }
         }
         named("androidMain") {
             dependencies {
                 api("androidx.appcompat:appcompat:1.5.1")
                 api("androidx.core:core-ktx:1.8.0")
+                // SQL Delight
+                implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
+            }
+        }
+
+        named("desktopMain") {
+            dependencies {
+                implementation("com.squareup.sqldelight:sqlite-driver:$sqldelightVersion")
             }
         }
     }

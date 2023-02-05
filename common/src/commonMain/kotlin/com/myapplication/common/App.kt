@@ -1,3 +1,5 @@
+package com.myapplication.common
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -170,7 +172,7 @@ fun App() {
 //                    Modifier.clickable { mExpanded = !mExpanded })
 //            }
 //        )
-//        DropdownMenu(
+//        com.myapplication.common.DropdownMenu(
 //            ,
 //            onDismissRequest = { mExpanded = false },
 //            modifier = Modifier.width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
@@ -179,10 +181,10 @@ fun App() {
 //}
 
 //@Composable
-//fun DropdownMenu(expanded: Boolean, onDismissRequest: () -> Unit, modifier: Any, function: () -> Unit) {
+//fun com.myapplication.common.DropdownMenu(expanded: Boolean, onDismissRequest: () -> Unit, modifier: Any, function: () -> Unit) {
 //    val listItems = arrayOf("Aadhaar Card", "Pan Card", "Electricity Bill", "Ration Card", "Water Bill")
 //        listItems.forEach { label ->
-//            DropdownMenuItem(onClick = {
+//            com.myapplication.common.DropdownMenuItem(onClick = {
 //                mSelectedText = label
 //                mExpanded = false
 //            }) {
