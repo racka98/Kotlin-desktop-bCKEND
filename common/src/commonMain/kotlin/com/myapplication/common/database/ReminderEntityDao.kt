@@ -24,15 +24,9 @@ class ReminderEntityDao(private val db: demoDatabase) {
      * Failure likely means the primary key (id: String) already exists or some data corrupted
      * Read the exception provided for more information.
      */
-    fun insertReminder(
-        name: String,
-        password: String,
-        identification: String,
-        data: ByteArray?
-    ): Result<Unit> = try {
-        db.demoDatabaseQueries.transaction {
-            insertReminder(name, password, identification, data)
-        }
+    fun insert(reminder: Reminder): Result<Unit> = try {
+        db.demoDatabaseQueries
+            .insertReminder(reminder.name, reminder.password, reminder.identification, reminder.data)
         Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)

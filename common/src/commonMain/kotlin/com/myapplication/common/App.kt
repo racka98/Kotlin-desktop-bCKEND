@@ -21,7 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import java.io.File
+import com.myapplication.common.database.ReminderEntityDao
+import com.myapplication.common.database.getDatabase
+import com.myapplication.common.model.Reminder
 import javax.swing.JFileChooser
 
 
@@ -34,14 +36,27 @@ fun selectFile(pathState: MutableState<String?>) {
 }
 
 @Composable
-fun App() {
+fun App(contextProvider: ContextProvider) {
+    val reminderDao = remember { ReminderEntityDao(db = getDatabase(contextProvider)) }
+    AppContents(
+        onSubmit = reminderDao::insert // This is called a member reference. See: https://stackoverflow.com/a/59823628/15285215
+    )
+}
+
+@Composable
+fun AppContents(
+    onSubmit: (Reminder) -> Unit
+) {
     val scrollState = rememberScrollState()
     MaterialTheme {
         Column(
             modifier = Modifier.verticalScroll(scrollState)
         ) {
             //id Text Area ****************************************************************
-            var text1 by remember { mutableStateOf("") }
+            /**
+             * ID is auto-generated. We likely don't need this input
+             */
+            /*var text1 by remember { mutableStateOf("") }
             Column(Modifier.padding(20.dp)) {
                 Text("ID ", textAlign = TextAlign.Center)
                 OutlinedTextField(
@@ -49,15 +64,15 @@ fun App() {
                     onValueChange = { text1 = it },
                     label = { Text("id") }
                 )
-            }
+            }*/
 
             //Full Name Text Area **************************************************************************************
-            var text by remember { mutableStateOf("") }
+            var fullNameText by remember { mutableStateOf("") }
             Column(Modifier.padding(20.dp)) {
                 Text("Full Name", textAlign = TextAlign.Center)
                 OutlinedTextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = fullNameText,
+                    onValueChange = { fullNameText = it },
                     label = { Text("Full Name") }
                 )
             }
@@ -101,42 +116,18 @@ fun App() {
             }
 //            ExposedDropdownMenu(Context)
 
-            //Choose File **********************************************
-            val sourcePath = remember { mutableStateOf<String?>(null) }
-            var isFileChooserOpen by remember { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(onClick = {
-                    selectFile(sourcePath)
-                    println(sourcePath.value)
-
-                    isFileChooserOpen = true
-                }) {
-                    Text("Choose File")
-                }
-            }
             //Submit Button *********************************************
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = {
-                    val folder = "C:\\Intern"
-                    val fileName = text
-                    val f = File(folder, fileName)
-                    f.mkdir()
-                    //Creating New Folder inside Name for identification
-                    val folder1 = folder + "\\" + fileName
-                    val fileName1 = mSelectedText
-                    val f1 = File(folder1, fileName1)
-                    f1.mkdir()
-                    val destinePath: String = folder1 + "\\" + fileName1
-                    val destination: String = destinePath
-
-                    val source: String = sourcePath.value as String
-                    println(source)
-                    println(destination)
+                    val reminder = Reminder(
+                        id = 0L, // We put 0 because it will be auto-generated
+                        name = fullNameText,
+                        password = password,
+                        identification = mSelectedText, // You should probably complete this
+                        data = null // I don't know what you want to put in this field
+                    )
                 }) {
                     Text("Submit")
                 }

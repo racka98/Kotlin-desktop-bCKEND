@@ -8,5 +8,5 @@ actual fun getPlatformName(): String = ""
 @Preview
 @Composable
 fun AppPreview() {
-    App()
+    App(ContextProvider())
 }
