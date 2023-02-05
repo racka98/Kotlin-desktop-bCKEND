@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -24,31 +25,25 @@ import androidx.compose.ui.unit.toSize
 import com.myapplication.common.database.ReminderEntityDao
 import com.myapplication.common.database.getDatabase
 import com.myapplication.common.model.Reminder
-import javax.swing.JFileChooser
-
-
-fun selectFile(pathState: MutableState<String?>) {
-    JFileChooser().apply {
-        if (showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            pathState.value = selectedFile.path
-        }
-    }
-}
 
 @Composable
 fun App(contextProvider: ContextProvider) {
     val reminderDao = remember { ReminderEntityDao(db = getDatabase(contextProvider)) }
+    val reminders = reminderDao.selectAll().collectAsState(emptyList())
     AppContents(
+        reminders = reminders,
         onSubmit = reminderDao::insert // This is called a member reference. See: https://stackoverflow.com/a/59823628/15285215
     )
 }
 
 @Composable
 fun AppContents(
+    reminders: State<List<Reminder>>,
     onSubmit: (Reminder) -> Unit
 ) {
     val scrollState = rememberScrollState()
     MaterialTheme {
+        // TODO: Consider making this a LazyColumn
         Column(
             modifier = Modifier.verticalScroll(scrollState)
         ) {
@@ -79,8 +74,8 @@ fun AppContents(
 
             //Password Text Area ***********************************************************************************
             var password by remember { mutableStateOf("") }
-            Text("Enter Your Password", textAlign = TextAlign.Center)
             Column(Modifier.padding(20.dp)) {
+                Text("Enter Your Password", textAlign = TextAlign.Center)
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -114,25 +109,79 @@ fun AppContents(
                 )
 
             }
-//            ExposedDropdownMenu(Context)
+            // TODO: ExposedDropdownMenu(Context)
 
             //Submit Button *********************************************
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(onClick = {
+            Button(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                onClick = {
                     val reminder = Reminder(
                         id = 0L, // We put 0 because it will be auto-generated
                         name = fullNameText,
                         password = password,
-                        identification = mSelectedText, // You should probably complete this
-                        data = null // I don't know what you want to put in this field
+                        identification = mSelectedText, //TODO: You should probably complete this
+                        data = null //TODO: I don't know what you want to put in this field
                     )
-                }) {
-                    Text("Submit")
+                    onSubmit(reminder)
+
+                    // Reset the fields
+                    fullNameText = ""
+                    password = ""
+                    mSelectedText = ""
                 }
+            ) {
+                Text("Submit")
             }
+
+            // All Saved Reminders
+            RemindersList(reminders)
         }
+    }
+}
+
+/**
+ * Display all the saved Reminders
+ */
+@Composable
+fun ColumnScope.RemindersList(
+    reminders: State<List<Reminder>>
+) {
+    Text(
+        text = "Saved Reminders",
+        style = MaterialTheme.typography.h3,
+        modifier = Modifier.padding(20.dp)
+    )
+
+    if (reminders.value.isEmpty()) {
+        Text(
+            text = "Saved Reminders",
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(20.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+    }
+
+    reminders.value.forEachIndexed { _, reminder ->
+        Text(text = "ID: ${reminder.id}", modifier = Modifier.padding(horizontal = 20.dp))
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "Full Name: ${reminder.name.ifBlank { "None" }}",
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "Password: ${reminder.password.ifBlank { "None" }}",
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "Identification: ${reminder.identification.ifBlank { "None" }}",
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+        Divider(modifier = Modifier.padding(horizontal = 20.dp))
+        Spacer(Modifier.height(20.dp))
     }
 }
 
