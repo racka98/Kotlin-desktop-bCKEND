@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS DemoEntity (
-    id TEXT,
-    name TEXT,
-    password INTEGER NOT NULL,
-    identification TEXT NOT NULL ,
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL,
+    identification TEXT NOT NULL,
     data BLOB
 );
 
@@ -11,5 +11,5 @@ SELECT *
 FROM DemoEntity;
 
 insertReminder:
-INSERT OR IGNORE INTO DemoEntity(id, name,password,identification,data)
-VALUES (?,?,?,?,?);
+INSERT OR IGNORE INTO DemoEntity(name,password,identification,data)
+VALUES (?,?,?,?);
