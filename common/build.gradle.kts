@@ -12,6 +12,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(compose.runtime)
+                api(compose.ui)
                 api(compose.foundation)
                 api(compose.material)
                 // Needed only for preview.

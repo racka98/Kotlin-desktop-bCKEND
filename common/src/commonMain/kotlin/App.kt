@@ -2,13 +2,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -16,11 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import androidx.compose.ui.window.PopupProperties
-import java.awt.Color
 import java.io.File
 import javax.swing.JFileChooser
-
 
 
 fun selectFile(pathState: MutableState<String?>) {
@@ -30,45 +30,49 @@ fun selectFile(pathState: MutableState<String?>) {
         }
     }
 }
+
 @Composable
 fun App() {
+    val scrollState = rememberScrollState()
     MaterialTheme {
-        Column {
-            //id Text Area **************************************************************************************
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
+        ) {
+            //id Text Area ****************************************************************
             var text1 by remember { mutableStateOf("") }
-            Column(Modifier.padding(20.dp)){
+            Column(Modifier.padding(20.dp)) {
                 Text("ID ", textAlign = TextAlign.Center)
                 OutlinedTextField(
-                    value=text1,
-                    onValueChange = { text1 = it},
-                    label = { Text("id")}
+                    value = text1,
+                    onValueChange = { text1 = it },
+                    label = { Text("id") }
                 )
             }
 
-        //Full Name Text Area **************************************************************************************
-        var text by remember { mutableStateOf("") }
-        Column(Modifier.padding(20.dp)){
-            Text("Full Name", textAlign = TextAlign.Center)
-            OutlinedTextField(
-                value=text,
-                onValueChange = { text= it},
-                label = { Text("Full Name")}
-            )
-        }
+            //Full Name Text Area **************************************************************************************
+            var text by remember { mutableStateOf("") }
+            Column(Modifier.padding(20.dp)) {
+                Text("Full Name", textAlign = TextAlign.Center)
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Full Name") }
+                )
+            }
 
-        //Password Text Area ***********************************************************************************
-        var password by remember { mutableStateOf("") }
-        Text("Enter Your Password", textAlign = TextAlign.Center)
+            //Password Text Area ***********************************************************************************
+            var password by remember { mutableStateOf("") }
+            Text("Enter Your Password", textAlign = TextAlign.Center)
             Column(Modifier.padding(20.dp)) {
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password")},
+                    label = { Text("Password") },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
             }
-        //Identification dropdown menu Text Area ***************************************************************
+            //Identification dropdown menu Text Area ***************************************************************
             var mExpanded by remember { mutableStateOf(false) }
 
             val icon = if (mExpanded)
@@ -76,7 +80,7 @@ fun App() {
             else
                 Icons.Filled.KeyboardArrowDown
 
-            var mTextFieldSize by remember { mutableStateOf(" ")}
+            var mTextFieldSize by remember { mutableStateOf(" ") }
 
             var mSelectedText by remember { mutableStateOf("") }
             Column(Modifier.padding(20.dp)) {
@@ -84,22 +88,24 @@ fun App() {
                 OutlinedTextField(
                     value = mSelectedText,
                     onValueChange = { mSelectedText = it },
-                    modifier = Modifier.fillMaxWidth().onGloballyPositioned { coordinates -> mTextFieldSize = coordinates.size.toSize().toString() },
-                    label = {Text("Label")},
+                    modifier = Modifier.fillMaxWidth()
+                        .onGloballyPositioned { coordinates -> mTextFieldSize = coordinates.size.toSize().toString() },
+                    label = { Text("Label") },
                     trailingIcon = {
-                        Icon(icon,"contentDescription", Modifier.clickable { mExpanded = !mExpanded })
+                        Icon(icon, "contentDescription", Modifier.clickable { mExpanded = !mExpanded })
                     }
                 )
 
             }
 //            ExposedDropdownMenu(Context)
 
-            //Choose File ******************************************************************************************
+            //Choose File **********************************************
             val sourcePath = remember { mutableStateOf<String?>(null) }
             var isFileChooserOpen by remember { mutableStateOf(false) }
 
             Column(
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Button(onClick = {
                     selectFile(sourcePath)
                     println(sourcePath.value)
@@ -109,31 +115,32 @@ fun App() {
                     Text("Choose File")
                 }
             }
-            //Submit Button ******************************************************************************************
-                Column(
-                    modifier = Modifier.fillMaxWidth()) {
-                    Button(onClick = {
-                        val folder = "C:\\Intern"
-                        val fileName= text
-                        val f = File(folder, fileName)
-                        f.mkdir()
-                        //Creating New Folder inside Name for identification
-                        val folder1 = folder+"\\"+fileName
-                        val fileName1= mSelectedText
-                        val f1 = File(folder1, fileName1)
-                        f1.mkdir()
-                        val destinePath:String =folder1+"\\"+fileName1
-                        val destination:String = destinePath
+            //Submit Button *********************************************
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = {
+                    val folder = "C:\\Intern"
+                    val fileName = text
+                    val f = File(folder, fileName)
+                    f.mkdir()
+                    //Creating New Folder inside Name for identification
+                    val folder1 = folder + "\\" + fileName
+                    val fileName1 = mSelectedText
+                    val f1 = File(folder1, fileName1)
+                    f1.mkdir()
+                    val destinePath: String = folder1 + "\\" + fileName1
+                    val destination: String = destinePath
 
-                        val source:String = sourcePath.value as String
-                        println(source)
-                        println(destination)
-                    }) {
-                        Text("Submit")
-                    }
+                    val source: String = sourcePath.value as String
+                    println(source)
+                    println(destination)
+                }) {
+                    Text("Submit")
                 }
             }
         }
+    }
 }
 
 
@@ -189,7 +196,7 @@ fun DropdownMenu(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
-    properties: PopupProperties = PopupProperties(focusable = true),
+    //properties: PopupProperties = PopupProperties(focusable = true), // Won't work in commonMain
     content: @Composable ColumnScope.() -> Unit
 ) {
 }
@@ -202,7 +209,7 @@ fun DropdownMenuItem(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
-    colors: MenuItemColors = MenuDefaults.itemColors(),
+    //colors: MenuItemColors = MenuDefaults.itemColors(), // Won't work in commonMain
     contentPadding: PaddingValues = MenuDefaults.DropdownMenuItemContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ): Unit {
@@ -215,20 +222,23 @@ fun DropdownDemo() {
     val disabledValue = "B"
     var selectedIndex by remember { mutableStateOf(0) }
     Box(modifier = Modifier.fillMaxSize().wrapContentSize(androidx.compose.ui.Alignment.TopStart)) {
-        Text(items[selectedIndex],modifier = Modifier.fillMaxWidth().clickable(onClick = { expanded = true }).background(
-            Color.GRAY))
+        Text(
+            items[selectedIndex],
+            modifier = Modifier.fillMaxWidth()
+                .clickable(onClick = { expanded = true })
+                .background(Color.Gray)
+        )
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth().background(
-                Color.RED)
+            modifier = Modifier.fillMaxWidth().background(color = Color.Red)
         ) {
             items.forEachIndexed { index, s ->
                 DropdownMenuItem(onClick = {
                     selectedIndex = index
                     expanded = false
                 }
-                ){
+                ) {
                     val disabledText = if (s == disabledValue) {
                         " (Disabled)"
                     } else {
